@@ -7,20 +7,24 @@ const path = require('path');
 const axios = require('axios');
 const sharp = require('sharp');
 
-const utils = require('../utils');
-
 async function dl_and_convert_audio(videoUrl,settings) {
     const dl_detail = {};
     var temp_id = `.${settings.convert_type}.temp`;
     var to_id = `.${settings.convert_type}`;
+    var video_identifier = `[${videoUrl.replace("https://www.youtube.com/watch?v=","")}] `
+
+    console.log(video_identifier + "Download starting..");
 
     return new Promise(async (resolve, reject) => {
         //convert youtube info and youtube audio to data
+        console.log(video_identifier + "Searching video information..");
         const info = await ytdl.getInfo(videoUrl).catch(err => reject(err));
+        console.log(video_identifier + "Downloading video audio..");
         const audioStream = await ytdl(videoUrl,{quality: 'highestaudio',filter: 'audioonly'});
         const filename = info.videoDetails.title;
 
         //write audio file
+        console.info(video_identifier + "Writing audio file as '" + (settings.path + filename + temp_id) + "'..");
         var audioData = audioStream.pipe(fs.createWriteStream(settings.path + filename + temp_id))
 
         dl_detail.videoDetails = info.videoDetails;
@@ -34,14 +38,19 @@ async function dl_and_convert_audio(videoUrl,settings) {
                 '"' + path.join(settings.path,filename + "." + settings.convert_type) + '"',
             ];
             dl_detail.convertArgsCmd = dl_detail.convertArgsArray.join(' ');
+
+            console.log(video_identifier + "Converting file.. (Can take several seconds to end)");
             exec(`${dl_detail.convertArgsCmd}`,async (err) => {
                 if(err) {reject(err);}
                 else{
                     //remove temp file
+                    console.log(video_identifier + "Removing temp audio file..");
                     fs.unlink(path.join(settings.path,filename + temp_id),() => {})
 
                     //rewrite mp3 tag after conversion is finished
                     if(settings.convert_type === "mp3") {
+                        console.log(video_identifier + "Adding metadata information..");
+
                         const tags = NodeID3.read(path.join(settings.path,filename + "." + settings.convert_type));
                         const response = await axios.get(info.videoDetails.thumbnails[info.videoDetails.thumbnails.length-1].url,{responseType: 'arraybuffer'});
                         const jpegBuffer = await sharp(response.data, {failOnError: false}).jpeg().toBuffer();
@@ -57,6 +66,7 @@ async function dl_and_convert_audio(videoUrl,settings) {
                         dl_detail.metadata = tags
                     }
 
+                    console.log(video_identifier + "Download finished with success !");
                     resolve(dl_detail);
                 }
             });
