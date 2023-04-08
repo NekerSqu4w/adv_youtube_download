@@ -64,6 +64,8 @@ async function dl_and_convert_audio(videoUrl,settings) {
                             imageBuffer: jpegBuffer
                         }
                         NodeID3.update(tags, path.join(settings.path,filename + to_id));
+
+                        //fs.writeFile("tags.txt",JSON.stringify(tags,"",4),() => {})
                         dl_detail.metadata = tags
                     }
 
@@ -111,6 +113,8 @@ module.exports = async function (videoUrl,settings) {
                     .catch(err => reject(err));
             }
         }
+
+        console.log("All download has been finished with success !");
         resolve(RETURN_INFO);
     });
 }
