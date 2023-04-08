@@ -2,6 +2,7 @@
 const ytmp3 = require("./adv_youtube_download");
 
 //dl audio using cmd
+//to use node ytdl.js yt_url
 const url = process.argv[2];
 const convert_type = process.argv[3] || "mp3"
 
