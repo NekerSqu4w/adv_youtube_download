@@ -16,6 +16,7 @@ async function dl_and_convert_audio(videoUrl,settings) {
     console.log(video_identifier + "Download starting..");
 
     return new Promise(async (resolve, reject) => {
+        if(!videoUrl.startsWith("https://www.youtube.com/watch?v=")) {reject(videoUrl + " is not valid");};
         //convert youtube info and youtube audio to data
         console.log(video_identifier + "Searching video information..");
         const info = await ytdl.getInfo(videoUrl).catch(err => reject(err));

@@ -19,7 +19,7 @@ Allow you to convert any YouTube video to audio file formats.
 ## Usage
 
 ```js
-const ytmp3 = require("adv_youtube_download");
+const ytmp3 = require("./adv_youtube_download");
 
 let settings = {
     path: "download/",  // Path of the final output
