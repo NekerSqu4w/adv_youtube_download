@@ -1,0 +1,28 @@
+{
+    "name": "ytmp3",
+    "description": "Download youtube audio to file !",
+    "version": "1.0.0",
+    "author": "AstalNeker",
+    "main": "download.js",
+    "dependencies": {
+        "axios": "^1.3.5",
+        "child_process": "^1.0.2",
+        "fs": "^0.0.1-security",
+        "node-id3": "^0.2.6",
+        "path": "^0.12.7",
+        "sharp": "^0.32.0",
+        "ytdl-core": "github:khlevon/node-ytdl-core#v4.11.3-patch.1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/NekerSqu4w/ytmp3"
+    },
+    "keywords": [
+        "youtube",
+        "audio",
+        "download",
+        "mp3",
+        "m4a",
+        "ogg"
+    ]
+}
