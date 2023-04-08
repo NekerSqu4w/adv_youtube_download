@@ -11,10 +11,5 @@ if(!url) {
     process.exit(1);
 }
 
-ytmp3.downloadAudio(url,{path: "my_download/",convert_type: convert_type})
-    .then(response => {
-        console.log(response);
-    })
-    .catch(err => {
-        console.log(err);
-    })
+ytmp3.downloadAudio(url,{path: "download/",convert_type: convert_type})
+    .then(response => {}).catch(err => {})
