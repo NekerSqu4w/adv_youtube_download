@@ -1,0 +1,27 @@
+/// <reference types="node" />
+
+declare module 'adv_youtube_download' {
+    namespace downloadAudio {
+        interface downloadAudioSettings {
+            path?: string;
+            convert_type?: string;
+        }
+
+        interface returnDownloadInfo {
+            converted_file: [
+                key: {
+                    videoDetails: object;
+                    savedAs: string;
+                    convertArgsArray: object;
+                    convertArgsCmd: string;
+                    metadata: object;
+                }
+            ];
+            settings: object;
+        }
+    }
+
+    function downloadAudio(videoUrl: string | string[], settings?: downloadAudio.downloadAudioSettings): Promise<downloadAudio.returnDownloadInfo>;
+
+    export = downloadAudio;
+}

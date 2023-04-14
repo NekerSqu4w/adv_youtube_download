@@ -7,7 +7,7 @@ const path = require('path');
 const axios = require('axios');
 const sharp = require('sharp');
 
-async function dl_and_convert_audio(videoUrl,settings) {
+dl_and_convert_audio = (videoUrl,settings) => {
     const dl_detail = {};
     var temp_id = `.${settings.convert_type}.temp`;
     var to_id = `.${settings.convert_type}`;
@@ -19,7 +19,7 @@ async function dl_and_convert_audio(videoUrl,settings) {
         if(!videoUrl.startsWith("https://www.youtube.com/watch?v=")) {reject(videoUrl + " is not valid");};
         //convert youtube info and youtube audio to data
         console.log(video_identifier + "Searching video information..");
-        const info = await ytdl.getInfo(videoUrl).catch(err => reject(err));
+        const info = await ytdl.getInfo(videoUrl).catch(err => reject);
         console.log(video_identifier + "Downloading video audio..");
         const audioStream = await ytdl(videoUrl,{quality: 'highestaudio',filter: 'audioonly'});
         const filename = info.videoDetails.title;
@@ -77,23 +77,14 @@ async function dl_and_convert_audio(videoUrl,settings) {
     })
 }
 
-/**
- * Download any Youtube video to a folder with any extension
- * @param {Array} videoUrl The url or array of url from the video you wanna get the audio to a file
- * @param {Object} settings The settings used to convert your audio
- *
- * @returns {Object} Return a list of downloaded audio, with some information about, like audio tags if '.mp3' is used.
- * 
- * @example ytmp3.downloadAudio(["https://www.youtube.com/watch?v=8Xsey_hAioU"],{path: "my_download/",convert_type: "mp3"})
- */
-module.exports = async function (videoUrl,settings) {
-    let RETURN_INFO = {};
-    RETURN_INFO.settings = settings;
+downloadAudio = (videoUrl,settings) => {
+    const RETURN_INFO = {};
     settings = settings || {};
     settings.path = settings.path || "";
     settings.convert_type = settings.convert_type || "mp3";
 
     RETURN_INFO.converted_file = [];
+    RETURN_INFO.settings = settings;
 
     return new Promise(async (resolve, reject) => {
         if(typeof(videoUrl) === "string") {
@@ -101,7 +92,7 @@ module.exports = async function (videoUrl,settings) {
                 .then(detail => {
                     RETURN_INFO.converted_file.push(detail);
                 })
-                .catch(err => reject(err));
+                .catch(err => reject);
         }
         else if(typeof(videoUrl === "object")) {
             for(const key in videoUrl) {
@@ -110,7 +101,7 @@ module.exports = async function (videoUrl,settings) {
                     .then(detail => {
                         RETURN_INFO.converted_file.push(detail);
                     })
-                    .catch(err => reject(err));
+                    .catch(err => reject);
             }
         }
 
@@ -118,3 +109,6 @@ module.exports = async function (videoUrl,settings) {
         resolve(RETURN_INFO);
     });
 }
+
+module.exports.downloadAudio = downloadAudio;
+module.exports.version = require('./package.json').version;
